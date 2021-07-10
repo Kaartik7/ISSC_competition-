@@ -1,0 +1,90 @@
+---
+title: "Crimes"
+author: "Yu-Chun Chien"
+date: "7/10/2021"
+output: pdf_document
+---
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+#install.packages("hrbrthemes")
+#install.packages("viridis")
+#library(viridis)
+```
+
+```{r, warning =FALSE}
+# import data
+crime <- read_csv("Reported Crimes .csv")
+shooting <- read_csv("Shooting Occurrences (2014-2019).csv")
+rates <- read_csv("neighbourhood-crime-rates.csv")
+victims <- read_csv("Victims of Crime (2014-2019).csv")
+```
+
+```{r}
+# crime count by category
+by_category <- ggplot(crime, aes(x = Category, y = Count_))+ geom_col(fill = "navyblue") + theme_classic()
+
+by_category
+```
+
+```{r}
+# crime count by subcategory
+by_subcategory <- ggplot(crime, aes(x = Subtype, y = Count_))+ geom_col() + coord_flip()
+
+by_subcategory
+```
+
+```{r}
+# number of unsolved crime by category
+crime$unsolved <- c(crime$Count_ - crime$CountCleared)
+
+unsolved_bycategory <- ggplot(crime, aes(x = Category, y = unsolved))+ geom_col()
+unsolved_bycategory
+
+```
+
+```{r}
+# number of unsolved crime by subcategory
+
+unsolved_bysubcategory <- ggplot(crime, aes(x = Subtype, y = unsolved))+ geom_col()+ coord_flip()
+unsolved_bysubcategory
+
+```
+
+```{r}
+# solved by category
+solved_bycategory <- ggplot(crime, aes(x = Category, y = CountCleared))+ geom_col()
+solved_bycategory
+```
+
+
+
+
+
+```{r}
+# unsolved by year
+#wrong
+
+unsolved_year <- ggplot(crime, aes(x = ReportedYear, y = unsolved))+ geom_col()
+unsolved_year
+```
+
+```{r}
+# shooting by year
+shooting_year <- ggplot(shooting, aes(x = OccurredYear, y = Count_))+ geom_col()
+shooting_year
+```
+
+```{r}
+# characteristics of victims
+ggplot(victims, aes(AgeCohort, Subtype)) + geom_tile(aes(fill=Count_), colour = "white") + scale_fill_gradient2(limits = c(0, 750), low = "white", mid = "yellow", high = "red")
+```
+
+```{r}
+ggplot(victims, aes(AgeCohort, Count_, fill = Sex)) + geom_col(position = "dodge") + facet_grid(~Subtype) + scale_fill_manual(values = c("#00AFBB", "#E7B800", "#FC4E07"))
+```
+
+
+
